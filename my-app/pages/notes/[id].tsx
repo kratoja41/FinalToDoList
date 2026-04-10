@@ -1,4 +1,4 @@
-import { useState, useEffect, FormEvent } from "react";
+import { useState, useEffect, FormEvent, useMemo } from "react"; // Přidán useMemo
 import { useRouter } from "next/router";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
@@ -19,15 +19,34 @@ function EditNoteForm({ noteId, initialTitle, initialContent }: { noteId: string
     setIsMounted(true);
   }, []);
 
-  const parsedContent = initialContent ? JSON.parse(initialContent) : undefined;
-  const editor = useCreateBlockNote({ initialContent: parsedContent });
+ 
+  const parsedContent = useMemo(() => {
+    if (!initialContent) return undefined;
+    try {
+      const parsed = JSON.parse(initialContent);
+      
+      return Array.isArray(parsed) && parsed.length > 0 ? parsed : undefined;
+    } catch (e) {
+      console.error("Chyba při parsování JSONu:", e);
+      return undefined;
+    }
+  }, [initialContent]);
+
+  // Vytvoření editoru s ošetřeným obsahem
+  const editor = useCreateBlockNote(
+    parsedContent ? { initialContent: parsedContent } : undefined
+  );
+  
 
   const handleUpdate = async (e: FormEvent) => {
     e.preventDefault();
     const res = await fetch(`/api/notes/${noteId}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ title, content: JSON.stringify(editor.document) }),
+      body: JSON.stringify({ 
+        title, 
+        content: JSON.stringify(editor.document) 
+      }),
     });
 
     if (res.ok) router.push("/notes");
@@ -41,7 +60,6 @@ function EditNoteForm({ noteId, initialTitle, initialContent }: { noteId: string
     else setError("Chyba při mazání poznámky.");
   };
 
-  
   if (!isMounted) return null;
 
   return (
