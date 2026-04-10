@@ -11,7 +11,10 @@
   },
   "dependencies": {
     "@blocknote/core": "^0.47.3",
+    "@blocknote/mantine": "^0.47.3",
     "@blocknote/react": "^0.47.3",
+    "@mantine/core": "^8.3.18",
+    "@mantine/hooks": "^8.3.18",
     "@prisma/client": "^6.19.3",
     "bcryptjs": "^3.0.3",
     "dotenv": "^17.3.1",
