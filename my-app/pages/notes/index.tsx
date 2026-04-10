@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 
-// Pomocná funkce pro extrakci čistého textu z BlockNote JSONu
+
 const extractPlainText = (contentJson: string | null) => {
   if (!contentJson) return "Bez obsahu...";
   try {
@@ -22,11 +22,11 @@ const extractPlainText = (contentJson: string | null) => {
     }
     return text.trim() || "Bez obsahu...";
   } catch (e) {
-    // Pokud to náhodou není JSON, vrátíme to jako obyčejný text
+    
     return contentJson;
   }
 };
-// Typ pro naši poznámku
+
 type Note = {
   id: string;
   title: string;
@@ -38,20 +38,20 @@ export default function NotesDashboard() {
   const { data: session, status } = useSession();
   const router = useRouter();
   const [notes, setNotes] = useState<Note[]>([]);
-  // ... (tvůj stávající kód nahoře)
+  
   const [isLoading, setIsLoading] = useState(true);
 
-  // NOVÁ FUNKCE PRO IMPORT
+  
   const handleImport = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
     try {
-      // Přečteme obsah souboru
+      
       const text = await file.text();
       const jsonData = JSON.parse(text);
 
-      // Pošleme to na naše nové API
+      
       const res = await fetch("/api/notes/import", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -60,7 +60,7 @@ export default function NotesDashboard() {
 
       if (res.ok) {
         alert("Import proběhl úspěšně!");
-        window.location.reload(); // Pro zjednodušení obnovíme stránku
+        window.location.reload(); 
       } else {
         const data = await res.json();
         alert("Chyba importu: " + data.message);
@@ -71,12 +71,12 @@ export default function NotesDashboard() {
   };
 
   
-  // Ochrana routy - pokud není přihlášený, přesměrujeme ho pryč
+  
   useEffect(() => {
     if (status === "unauthenticated") {
       router.push("/login");
     } else if (status === "authenticated") {
-      // Pokud je přihlášený, stáhneme jeho poznámky z API
+      
       fetch("/api/notes")
         .then((res) => res.json())
         .then((data) => {
@@ -86,7 +86,7 @@ export default function NotesDashboard() {
     }
   }, [status, router]);
 
-  // Zatímco zjišťujeme, zda je přihlášený, ukážeme načítání
+  
   if (status === "loading" || isLoading) {
     return <div className="min-h-screen flex items-center justify-center text-black">Načítám...</div>;
   }

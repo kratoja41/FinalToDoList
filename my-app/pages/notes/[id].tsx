@@ -7,7 +7,7 @@ import { BlockNoteView } from "@blocknote/mantine";
 import "@blocknote/core/fonts/inter.css";
 import "@blocknote/mantine/style.css";
 
-// --- HLAVNÍ KOMPONENTA (Stará se o načtení dat) ---
+
 export default function EditNotePage() {
   const router = useRouter();
   const { id } = router.query;
@@ -38,22 +38,22 @@ export default function EditNotePage() {
     </div>;
   }
 
-  // Dokud nemáme data, ukazujeme načítání
+  
   if (status !== "authenticated" || !noteData) {
     return <div className="min-h-screen flex items-center justify-center text-black bg-gray-50">Načítám poznámku...</div>;
   }
 
-  // Jakmile máme data, zobrazíme samotný editor
+  
   return <EditNoteForm noteId={id as string} initialTitle={noteData.title} initialContent={noteData.content} />;
 }
 
-// --- KOMPONENTA FORMULÁŘE (Stará se o samotný BlockNote a tlačítka) ---
+
 function EditNoteForm({ noteId, initialTitle, initialContent }: { noteId: string, initialTitle: string, initialContent: string | null }) {
   const router = useRouter();
   const [title, setTitle] = useState(initialTitle);
   const [error, setError] = useState("");
 
-  // Pokusíme se převést uložený text zpět na JSON pro BlockNote
+  
   const parsedContent = initialContent ? JSON.parse(initialContent) : undefined;
   const editor = useCreateBlockNote({ initialContent: parsedContent });
 
@@ -70,7 +70,7 @@ function EditNoteForm({ noteId, initialTitle, initialContent }: { noteId: string
   };
 
   const handleDelete = async () => {
-    // Vyskakovací okno pro potvrzení (aby si to uživatel nesmazal omylem)
+    
     if (!window.confirm("Opravdu chcete tuto poznámku nenávratně smazat?")) return;
 
     const res = await fetch(`/api/notes/${noteId}`, { method: "DELETE" });
@@ -110,7 +110,7 @@ function EditNoteForm({ noteId, initialTitle, initialContent }: { noteId: string
               Uložit změny
             </button>
             
-            {/* Nové tlačítko pro stažení této konkrétní poznámky */}
+           
             <a 
               href={`/api/notes/export?id=${noteId}`} 
               download 

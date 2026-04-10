@@ -19,7 +19,7 @@ export default function Register() {
     });
 
     if (res.ok) {
-      // Pokud je registrace úspěšná, přesměrujeme na přihlášení
+      
       router.push("/login");
     } else {
       const data = await res.json();

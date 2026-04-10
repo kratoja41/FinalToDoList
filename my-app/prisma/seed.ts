@@ -6,11 +6,11 @@ const prisma = new PrismaClient();
 async function main() {
   console.log('Začínám seedovat databázi...');
 
-  // 1. Vytvoříme zahashované heslo pro demo uživatele (podle zadání: demo1234)
+  
   const hashedPassword = await hash('demo1234', 12);
 
-  // 2. Použijeme 'upsert' - vytvoří uživatele, pokud neexistuje. 
-  // Pokud už existuje, neudělá nic (aby skript nepadal při opakovaném spuštění).
+  
+  
   const demoUser = await prisma.user.upsert({
     where: { name: 'demo' },
     update: {},

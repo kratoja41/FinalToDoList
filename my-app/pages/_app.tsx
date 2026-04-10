@@ -7,7 +7,7 @@ export default function App({
   pageProps: { session, ...pageProps } 
 }: AppProps) {
   return (
-    // SessionProvider zajistí, že hook useSession bude fungovat všude
+    
     <SessionProvider session={session}>
       <Component {...pageProps} />
     </SessionProvider>

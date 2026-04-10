@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
 
-// NOVÉ SPRÁVNÉ IMPORTY:
+
 import { useCreateBlockNote } from "@blocknote/react";
 import { BlockNoteView } from "@blocknote/mantine";
 import "@blocknote/core/fonts/inter.css";
@@ -15,14 +15,14 @@ export default function CreateNote() {
   const [title, setTitle] = useState("");
   const [error, setError] = useState("");
   
-  // Ochrana proti chybám při renderování editoru na serveru (SSR)
+ 
   const [isMounted, setIsMounted] = useState(false);
   useEffect(() => { setIsMounted(true); }, []);
 
-  // Inicializace profi editoru BlockNote
+  
   const editor = useCreateBlockNote();
 
-  // Pokud uživatel není přihlášený, přesměrujeme ho
+ 
   useEffect(() => {
     if (status === "unauthenticated") router.push("/login");
   }, [status, router]);
@@ -36,7 +36,7 @@ export default function CreateNote() {
       return;
     }
 
-    // Obsah editoru převedeme na text (JSON), abychom ho mohli uložit do databáze
+    
     const content = JSON.stringify(editor.document);
 
     const res = await fetch("/api/notes", {
@@ -46,7 +46,7 @@ export default function CreateNote() {
     });
 
     if (res.ok) {
-      // Po úspěšném uložení ho hodíme zpět na nástěnku
+      
       router.push("/notes");
     } else {
       const data = await res.json();
@@ -54,7 +54,7 @@ export default function CreateNote() {
     }
   };
 
-  // Zatímco se stránka načítá, neukazujeme nic (aby neblikl neostylovaný obsah)
+  
   if (!isMounted || status !== "authenticated") return null;
 
   return (

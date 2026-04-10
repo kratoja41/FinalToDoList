@@ -17,24 +17,24 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   try {
     const body = req.body;
     
-    // Převedeme vstup vždy na pole, abychom s ním mohli jednotně pracovat
+    
     const notesToImport = Array.isArray(body) ? body : [body];
 
-    // Očistíme data a připravíme je pro databázi (ignorujeme cizí userId z importu)
+    
     const validNotes = notesToImport
       .filter((note: any) => note.title && typeof note.title === "string" && note.title.trim() !== "")
       .map((note: any) => ({
         title: note.title,
         content: note.content || "",
-        userId: userId, // Přiřadíme aktuálnímu uživateli!
-        // Prisma se automaticky postará o createdAt a updatedAt, pokud nejsou zadány
+        userId: userId, 
+        
       }));
 
     if (validNotes.length === 0) {
       return res.status(400).json({ message: "Nenalezeny žádné validní poznámky k importu. Titulek je povinný." });
     }
 
-    // Uložíme všechny platné poznámky najednou
+    
     await prisma.note.createMany({
       data: validNotes,
     });

@@ -13,18 +13,18 @@ export default function Login() {
     e.preventDefault();
     setError("");
 
-    // Použijeme zabudovanou funkci signIn z NextAuth
+    
     const res = await signIn("credentials", {
-      redirect: false, // Nechceme automatický refresh stránky při chybě
+      redirect: false, 
       name,
       password,
     });
 
     if (res?.error) {
-      // Zobrazíme chybu, kterou jsme definovali v [...nextauth].ts
+      
       setError(res.error);
     } else {
-      // Úspěch! Přesměrujeme uživatele na stránku s poznámkami
+      
       router.push("/notes");
     }
   };
