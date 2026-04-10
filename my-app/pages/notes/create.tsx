@@ -2,27 +2,27 @@ import { useState, useEffect, FormEvent } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
-
+import dynamic from "next/dynamic"; // 1. Přidán import pro dynamické načítání
 
 import { useCreateBlockNote } from "@blocknote/react";
 import { BlockNoteView } from "@blocknote/mantine";
 import "@blocknote/core/fonts/inter.css";
 import "@blocknote/mantine/style.css";
 
-export default function CreateNote() {
+
+function CreateNoteContent() {
   const router = useRouter();
   const { status } = useSession();
   const [title, setTitle] = useState("");
   const [error, setError] = useState("");
-  
- 
   const [isMounted, setIsMounted] = useState(false);
-  useEffect(() => { setIsMounted(true); }, []);
-
   
+  useEffect(() => { 
+    setIsMounted(true); 
+  }, []);
+
   const editor = useCreateBlockNote();
 
- 
   useEffect(() => {
     if (status === "unauthenticated") router.push("/login");
   }, [status, router]);
@@ -36,7 +36,6 @@ export default function CreateNote() {
       return;
     }
 
-    
     const content = JSON.stringify(editor.document);
 
     const res = await fetch("/api/notes", {
@@ -46,7 +45,6 @@ export default function CreateNote() {
     });
 
     if (res.ok) {
-      
       router.push("/notes");
     } else {
       const data = await res.json();
@@ -71,7 +69,6 @@ export default function CreateNote() {
         {error && <div className="bg-red-100 text-red-700 p-3 rounded mb-4">{error}</div>}
 
         <form onSubmit={handleSubmit}>
-          {/* Titulek */}
           <div className="mb-6">
             <label className="block text-sm font-medium text-gray-700 mb-2">Titulek poznámky</label>
             <input
@@ -84,12 +81,10 @@ export default function CreateNote() {
             />
           </div>
 
-          {/* BlockNote Editor */}
           <div className="mb-6 border border-gray-300 rounded p-2 min-h-[300px]">
             <BlockNoteView editor={editor} theme="light" />
           </div>
 
-          {/* Tlačítko pro uložení */}
           <button
             type="submit"
             className="w-full bg-blue-600 text-white p-3 rounded-lg font-bold hover:bg-blue-700 transition"
@@ -102,3 +97,8 @@ export default function CreateNote() {
     </div>
   );
 }
+
+
+export default dynamic(() => Promise.resolve(CreateNoteContent), {
+  ssr: false,
+});
