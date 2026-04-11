@@ -20,9 +20,12 @@ Pro spuštění projektu potřebujete mít nainstalované:
 ## Migrace a spuštění (lokálně)
 
 1. **Příprava DB:** Spusťte Docker
-2. **Migrace:**  npx prisma migrate dev --name init
-3. **Seedování:** npm run seed
-4. **Start:** npm run dev 
+2. **Inicializujte Prisma:**  npx prisma init
+3. **Nakonfigurujte .env soubor s připojovacím řetězcem:** DATABASE_URL="mysql://USER:PASSWORD@HOST:PORT/DATABASE"
+4. **Migrace:**  npx prisma migrate dev --name init
+5. **Vygenerujte Prisma Client:**  npx prisma generate
+6. **Seedování:** npm run seed
+7. **Start:** npm run dev 
 
 ## Demo uživatel
 V rámci seed skriptu je vytvořen uživatel pro rychlé testování:
